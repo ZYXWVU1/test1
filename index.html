@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bleem's Mini Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            position: absolute;
+            top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        #loginPage, #gameArea, #congratulations {
+            display: none;
+        }
+        #loginPage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #loginPage input {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #gameArea {
+            position: relative;
+            width: 80vw;
+            height: 80vh;
+            border: 2px solid #000;
+            background-color: #fff;
+        }
+        #target {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            cursor: pointer;
+        }
+        #score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+        }
+        #congratulations {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-size: 32px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Bleem's Mini Game!</h1>
+    <div id="loginPage">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+    <div id="gameArea">
+        <div id="target"></div>
+        <div id="score">Score: 0</div>
+    </div>
+    <div id="congratulations">
+        <p>Congratulations!</p>
+        <p>You reached a score of 25!</p>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="anjinde.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const loginPage = document.getElementById('loginPage');
+        const gameArea = document.getElementById('gameArea');
+        const target = document.getElementById('target');
+        const scoreDisplay = document.getElementById('score');
+        const congratulations = document.getElementById('congratulations');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        let score = 0;
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'bleem' && password === '200704') { // Simple authentication for demonstration
+                loginPage.style.display = 'none';
+                gameArea.style.display = 'block';
+                backgroundMusic.play();
+            } else {
+                alert('Invalid login. Please try again.');
+            }
+        }
+
+        function moveTarget() {
+            const gameAreaRect = gameArea.getBoundingClientRect();
+            const maxX = gameAreaRect.width - target.clientWidth;
+            const maxY = gameAreaRect.height - target.clientHeight;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            target.style.left = `${randomX}px`;
+            target.style.top = `${randomY}px`;
+        }
+
+        target.addEventListener('click', () => {
+            score++;
+            scoreDisplay.textContent = `Score: ${score}`;
+            if (score >= 25) {
+                gameArea.style.display = 'none';
+                congratulations.style.display = 'flex';
+                backgroundMusic.pause();
+            } else {
+                moveTarget();
+            }
+        });
+
+        moveTarget();
+    </script>
+</body>
+</html>
